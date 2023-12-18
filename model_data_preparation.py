@@ -60,6 +60,44 @@ def process_scRNA_data(scRNA):
     scRNA = scRNA.drop(columns=columns_to_drop)
     return scRNA
 
+def get_data_NN(scRNA, scATAC, labels):
+    """
+    Prepare data for a neural network
+
+    Args:
+    - scRNA (pd.DataFrame): DataFrame containing single-cell RNA-seq data
+    - scATAC (pd.DataFrame): DataFrame containing single-cell ATAC-seq data
+    - labels (list or array-like): Labels or target values for the data
+
+    Returns:
+    - trainloader (torch.utils.data.DataLoader): Training DataLoader
+    - valloader (torch.utils.data.DataLoader): Validation DataLoader
+    - testloader (torch.utils.data.DataLoader): Testing DataLoader
+    """
+    #one hot encode labels
+    label_encoder = LabelEncoder()
+    encoded_types = label_encoder.fit_transform(labels)
+
+    #make both data types into a tensor
+    sc_tensor = torch.tensor(data.to_numpy(), dtype=torch.float32)
+    encoded_type_tensor = torch.tensor(encoded_types, dtype=torch.int64)
+    full_dataset = torch.utils.data.TensorDataset(sc_tensor, encoded_type_tensor)
+
+
+    #split into train, test and validation the paper did a 80-10-10 split
+    train_size = int(0.8 * len(full_dataset))
+    val_test_size = (len(full_dataset) - train_size)/2
+
+    #split the data with a 80/10/10 split
+    train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(full_dataset, [train_size, int(val_test_size-.5), int(val_test_size+.5)])
+    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=64, num_workers = 2)
+    valloader = torch.utils.data.DataLoader(val_dataset, batch_size=64, num_workers = 2)
+    testloader =  torch.utils.data.DataLoader(test_dataset, batch_size=64, num_workers = 2)
+    
+    return trainloader, valloader, testloader
+        
+        
+        
 def maslov_sneppen_rewire_one_swap_per_iter(adj_matrix, num_iterations= 100000000):
     """
     Rewire edges in a network using the Maslov-Sneppen model with one swap per iteration.
