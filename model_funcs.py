@@ -383,6 +383,22 @@ def train_model_extended_reconstruction(model, train_loader, epochs=800, learnin
 
 #for combined sigGCN model (base and extended)
 
+
+class CombinedDataset(Dataset):
+    def __init__(self, nn_data, gcn_data, labels):
+        self.nn_data = nn_data
+        self.gcn_data = gcn_data  # This is a single graph object
+        self.labels = labels
+
+    def __len__(self):
+        return len(self.nn_data)
+
+    def __getitem__(self, idx):
+        nn_data_item = self.nn_data[idx]
+        label_item = self.labels[idx]
+        # gcn_data is the same for all samples, so it's not indexed
+        return nn_data_item, self.gcn_data, label_item
+
 def collate_fn_joint_model(batch):
    
     nn_data, gcn_data, labels = [], [], []
@@ -399,6 +415,7 @@ def collate_fn_joint_model(batch):
     gcn_data = batch[0][1]
 
     return nn_data, gcn_data, labels
+
 
 
 def prepare_data_loader_combined(sc, labels, adj_matrix, test_size=0.2, random_state=42, batch_size=32, shuffle=True):
@@ -550,7 +567,5 @@ def test_combined_model(model, test_loader, device='cuda'):
     average_accuracy = total_accuracy / len(test_loader)
 
     return average_classification_loss, average_reconstruction_loss, average_accuracy
-
-
 
 
