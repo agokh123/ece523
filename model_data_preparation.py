@@ -187,3 +187,31 @@ def generate_adjacency_matrix(gene_names, known_interactions):
         adj_matrix[i, j] = 1
     
     return adj_matrix
+
+def preprocess_joined_data(scRNA, scATAC, loaded_adj_matrix, num_peaks_to_keep=15000):
+    """
+    Function to concatenate adjancecny matrix and make the new enhanced gene network
+
+    Args:
+    - scRNA : scRNA dataframe
+    - scATAC : scATAC dataframe
+    - loaded_adj_matrix: enhanced adjancey matix
+    - num_genes_to_keep: 15000 genes kept
+
+    Returns:
+    - sc_joined : joined scATAC/scRNA frame
+    - trimmed_adj_matrix (numpy.ndarray): Corresponding enhanced gene matrix
+    """
+
+    # Concatenate scRNA and scATAC DataFrames
+    sc_joined = pd.concat([scRNA, scATAC], axis=1)
+    num_columns_to_keep = len(sc_joined.columns) - num_genes_to_keep
+    sc_joined = sc_joined.iloc[:, :num_columns_to_keep]
+
+    # Trim the overall network
+    num_rows_to_keep = loaded_adj_matrix.shape[0] - num_genes_to_keep
+    num_columns_to_keep = loaded_adj_matrix.shape[1] - num_genes_to_keep
+    trimmed_adj_matrix = loaded_adj_matrix[:num_rows_to_keep, :num_columns_to_keep]
+
+    return sc_joined, trimmed_adj_matrix
+
