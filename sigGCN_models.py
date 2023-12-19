@@ -51,7 +51,7 @@ class GCNAutoencoder_genes_and_peaks(nn.Module):
         # Decoder
         decoded = self.fc_decoder(combined)
 
-        return return encoded, decoded
+        return  encoded, decoded
   
 
 class NN(nn.Module):
