@@ -1,4 +1,6 @@
 Integrating ATAC-seq and RNA-seq for Cell Type Classification in Single-Cell Data
+
+
 Ameya Gokhale, Idris Seidu, Jasper Huang, Oscar Zhang 
 EC 523 FALL 2023 Project
 
