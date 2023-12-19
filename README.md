@@ -50,3 +50,5 @@ Functions/Output of projscrip.py:
 
 Sources: 
 1. Wang, T., Bai, J. & Nabavi, S. Single-cell classification using graph convolutional networks. BMC Bioinformatics 22, 364 (2021).
+2. Trevino AE, Müller F, Andersen J, Sundaram L, Kathiria A, Shcherbina A, Farh K, Chang HY, Pașca AM, Kundaje A, Pașca SP, Greenleaf WJ. Chromatin and gene-regulatory dynamics of the developing human cerebral cortex at single-cell resolution. Cell. 2021 Sep 16;184(19):5053-5069.e23. doi: 
+
