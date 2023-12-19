@@ -451,7 +451,7 @@ def prepare_data_loader_combined(sc, labels, adj_matrix, test_size=0.2, random_s
     combined_dataset = CombinedDataset(nn_data, gcn_data, train_labels)
 
     # Prepare DataLoader
-    train_loader = DataLoader(combined_dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collate_fn, drop_last=True)
+    train_loader = DataLoader(combined_dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collate_fn_joint_model, drop_last=True)
 
     nn_data_test = torch.tensor(test_df.values, dtype=torch.float32)
 
